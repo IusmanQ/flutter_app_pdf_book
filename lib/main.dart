@@ -1,20 +1,12 @@
 import 'dart:io';
 
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf_viewer_example/api/pdf_api.dart';
 import 'package:pdf_viewer_example/page/pdf_viewer_page.dart';
 import 'package:pdf_viewer_example/widget/button_widget.dart';
 
-Future main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+void main() {
 
   runApp(MyApp());
 }
@@ -44,52 +36,16 @@ class _MainPageState extends State<MainPage> {
         body: Center(
           child: Padding(
             padding: EdgeInsets.all(32),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ButtonWidget(
+                child: ButtonWidget(
                   text: 'Asset PDF',
                   onClicked: () async {
-                    final path = 'assets/sample.pdf';
+                    final path = 'assets/book.pdf';
                     final file = await PDFApi.loadAsset(path);
                     openPDF(context, file);
                   },
                 ),
-                const SizedBox(height: 16),
-                ButtonWidget(
-                  text: 'File PDF',
-                  onClicked: () async {
-                    final file = await PDFApi.pickFile();
-
-                    if (file == null) return;
-                    openPDF(context, file);
-                  },
-                ),
-                const SizedBox(height: 16),
-                ButtonWidget(
-                  text: 'Network PDF',
-                  onClicked: () async {
-                    final url =
-                        'https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf';
-                    final file = await PDFApi.loadNetwork(url);
-                    openPDF(context, file);
-                  },
-                ),
-                const SizedBox(height: 16),
-                ButtonWidget(
-                  text: 'Firebase PDF',
-                  onClicked: () async {
-                    final url = 'sample.pdf';
-                    final file = await PDFApi.loadFirebase(url);
-
-                    if (file == null) return;
-                    openPDF(context, file);
-                  },
-                ),
-              ],
             ),
           ),
-        ),
       );
 
   void openPDF(BuildContext context, File file) => Navigator.of(context).push(
